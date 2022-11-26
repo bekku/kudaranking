@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  {% load static %} <!--これと下記の一文によってjavascriptを活用することが可能になった。-->
+  <!-- <script src="{% static 'js/juni.js' %}" charset="utf-8"></script> -->
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <script data-ad-client="ca-pub-5444509011914766" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <title>くだらんきんぐ | {{ rankpage.title }}</title>
+  <meta name="description" content="{{ rankpage.description }}" />
+  <meta property="og:url" content="https://www.kudarank.work" />
+  <meta property="og:title" content="くだらんきんぐ | {{ rankpage.title }}" />
+  <meta property="og:image" content="{% static 'img/logo1.png' %}"/>
+  <meta property="og:type" content="website">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104974987-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-104974987-5');
+  </script>
+
+</head>
+<body>
+
+
+  <!-- header -->
+  <div class="header">
+    <div class="header_container">
+      <h1 class="header-headline">
+        <a href="{% url 'ranking:index' %}"><img src="{% static 'img/logo.png' %}" class="header_logo"></a>
+      </h1>
+      <div class="header_right">
+        <div class="header_menu">
+            <label for="label1"><div class="header_menuicon"><i class="fas fa-ellipsis-h"></i></div></label>
+            <input type="checkbox" id="label1"/>
+            <div class="hidden_show">
+              <!-- 非表示ここから-->
+              <div class="header_menucorner"></div>
+              <div class="header_menucorner2"></div>
+              <div class="header_menubox">
+                <form name="search1" method="GET" action="{% url 'ranking:search_results' %}">{% csrf_token %}
+                  <dl class="search1">
+                    <dt><input type="text" name="keyword" maxlength="20" required id="id_Post_name" placeholder="ランキング検索"></dt>
+                    <dd><button><span></span></button></dd>
+                    <!-- <dd><button type="submit" class="sbtn2"><i class="fas fa-search"></i><span></span></button></dd> -->
+                  </dl>
+                </form>
+                <div class="header_menulist"><a href="{% url 'ranking:index' %}"></a>トップページ</div>
+                <div class="header_menulist"><a href ="{% url 'ranking:new' %}"></a>ランキング作成</div>
+                {% if user.id %}
+                <div class="header_menulist hidden"><a href="{% url 'ranking:userpage' user_id=user.id %}"></a>マイページ</div>
+                {% else %}
+                <div class="header_menulist hidden"><a href="{%url 'account_login'%}?next={{ request.path }}"></a>ログイン</div>
+                {% endif %}
+                <div class="header_menuborder"></div>
+                <div class="header_menulist"><a href="{% url 'ranking:aboutpage' %}"></a>about</div>
+                <div class="header_menulist"><a href="{% url 'ranking:TermsofUse' %}"></a>利用規約・プライバシーポリシー</div>
+                <div class="header_menuborder"></div>
+                {% if user.username %}
+                <div class="header_menulist"><a href="{%url 'account_logout'%}"></a>ログアウト</div>
+                {% endif %}
+              </div>
+              <!--ここまで -->
+            </div>
+        </div>
+        {% if not user.username %}
+        <!-- ログインボタン -->
+        <div class="header_account_logout">
+          <div class="header_username">ログイン</div>
+          <a href="{%url 'account_login'%}?next={{ request.path }}"></a>
+        </div>
+        {% else %}
+        <!-- アカウントボタン -->
+            {% if user.first_name %}
+            <!-- ツイッターユーザー -->
+            <div class="header_account">
+              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <div class="header_username">{{user.first_name|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% else %}
+            <!-- くだらんきんぐユーザー -->
+            <div class="header_account">
+              <div class="header_username">{{user.username|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+<!-- header終わり -->
+
+
+
+  <div class="main">
+
+    <div class="ranking">
+      <h2 class="ranking_title">{{ rankpage.title }}</h2>
+      <div class="ranking_note">{{ rankpage.description }}</div>
+      <div class="ranking_author">作成者：<div class="ranking_authorname"><a href="{% url 'ranking:userpage' user_id=rankpage.Createduser.id %}">{{ rankpage.Createduser }}</a></div></div>
+    </div>
+
+    <div class="article_container_sankasiyo">
+      <p class="sankasiyo">投稿してランキングに参加しよう！</p>
+      {% if not user.username %}
+      <p class="login_note"><a href="{% url 'twitter_login' %}?next={{ request.path }}">Twitterでログイン</a> ← お得</p>
+      {% endif %}
+      <p>{% if form.errors %}
+    <div>{{form.non_field_errors}}</div>
+    　{% endif %}</p>
+
+
+      {% if not user.username%}
+      <form action="{% url 'ranking:rankpaged' ranking_id=rankpage.id %}" method="POST">{% csrf_token %}
+        <div class="cp_iptxt">
+          <label class="ef">
+            <input type="text" name="Post_name" maxlength="20" placeholder="名前" required>
+          </label>
+        </div>
+        <div class="cp_iptxt">
+          <label class="ef">
+            {% if rankpage.int_or_float %}
+            <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}(小数第一位まで)" step="0.1" required>
+            {% else %}
+            <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}" required>
+            {% endif %}
+          </label>
+        </div>
+        <div class="article_contents_more">
+          <div class="sankasiyo">
+            <button type="submit" class="article_more">送信！</button>
+        </div>
+        </div>
+      </form>
+
+      {% else %}
+          {% if not user.first_name%}
+          <form action="{% url 'ranking:rankpaged' ranking_id=rankpage.id %}" method="POST">{% csrf_token %}
+            <div class="cp_iptxt">
+              <label class="ef">
+                <input type="hidden" name="Post_name" maxlength="20" value={{user.username}} required id="id_Post_name" placeholder="名前">
+              </label>
+            </div>
+            <div class="cp_iptxt">
+              <label class="ef">
+                {% if rankpage.int_or_float %}
+                <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}(小数第一位まで)" step="0.1" required>
+                <!-- ステップ(step)を使うことで、小数点を表記できるようになるよ。https://www.softel.co.jp/blogs/tech/archives/5543? -->
+                {% else %}
+                <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}" required>
+                {% endif %}
+              </label>
+            </div>
+            <div class="article_contents_more">
+              <div class="sankasiyo">
+                <button type="submit" class="article_more">送信！</button>
+            </div>
+            </div>
+          </form>
+
+          {% else %}
+          <form action="{% url 'ranking:rankpaged' ranking_id=rankpage.id %}" method="POST">{% csrf_token %}
+            <div class="cp_iptxt">
+              <label class="ef">
+                <input type="hidden" name="Post_name" maxlength="20" value={{user.first_name}} required id="id_Post_name" placeholder="名前">
+              </label>
+            </div>
+            <div class="cp_iptxt">
+              <label class="ef">
+                {% if rankpage.int_or_float %}
+                <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}(小数第一位まで)" step="0.1" required>
+                {% else %}
+                <input type="number" name="Post_element" min="{{min_number}}" max="{{max_number}}" placeholder="{{ rankpage.element }}" required>
+                {% endif %}
+              </label>
+            </div>
+            <div class="article_contents_more">
+              <div class="sankasiyo">
+                <button type="submit" class="article_more">送信！</button>
+            </div>
+            </div>
+          </form>
+      {% endif %}
+    {% endif %}
+
+    </div>
+
+  </div>
+
+  <div class="ranking_comment_footer">
+
+  <div class="comment_more" id="commentMore">
+    <div class="comment_more-a" id="moreButtonText">コメントをさらに表示 <i class="fas fa-angle-up"></i></div>
+  </div>
+
+    <div class="comment_container" id="commentPanel">
+      <div class="comment_post_blank">
+      </div>
+
+      {% for i in post_coment %}
+
+      <div class="comment_post">
+        <p class="comment_name">{{i.Post_coment_name}}</p>
+        <p class="comment_note">{{i.Post_coment_text}}</p>
+        <!-- <p class="comment_time">20/01/01 12:34</p> -->
+      </div>
+      {% empty %}
+      <div class="comment_post">
+      <p class="comment_name">投稿はありません</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- <div class="commentform_container">
+
+      <form class="commentform_innner" action="/rankpage/11/" method="POST"><input type="hidden" name="csrfmiddlewaretoken" value="PuSJXGhJpdUKQUvsSd54eayptUwmMmLzfjCMh6OFvzr4PDxc3zk9dWcMuVeXcE6w">
+        <div class="cp_iptxt_commentname">
+          <label class="ef_comment">
+            <input type="text" name="Post_coment_name" maxlength="10" required id="id_Post_coment_name" placeholder="名前">
+          </label>
+        </div>
+        <div class="cp_iptxt_comment">
+          <label class="ef_comment">
+            <input type="text" name="Post_coment_text" maxlength="300" required id="id_Post_coment_text" placeholder="コメント">
+          </label>
+        </div>
+        <button type="submit" class="comment_btn">送信</button>
+      </form>
+    </div> -->
+
+
+  </div>
+
+  <script>
+  ///////コメントをさらに表示////////
+  const morebtn = document.getElementById('commentMore');
+  function openComment(){
+    document.getElementById('commentPanel').classList.toggle('comment_open');
+    // console.log(document.getElementById('moreButtonText').innnerHTML);
+    if(commentPanel.classList.contains('comment_open')){
+      document.getElementById('moreButtonText').innerHTML = 'コメントを閉じる <i class="fas fa-angle-down"></i>';
+    } else{
+      document.getElementById('moreButtonText').innerHTML = 'コメントをさらに表示 <i class="fas fa-angle-up"></i>';
+    }
+  }
+  morebtn.addEventListener('click', openComment, false);
+  ///////コメントをさらに表示////////
+
+  </script>
+</body>
+</html>

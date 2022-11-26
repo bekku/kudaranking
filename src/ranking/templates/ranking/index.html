@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <!-- <link href="/static/css/main.e6333c149190.css" rel="stylesheet" > -->
+  <link href="{% static 'css/main.css' %}" rel="stylesheet" >
+  <script data-ad-client="ca-pub-5444509011914766" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> -->
+  <meta charset="utf-8">
+  <meta name="description" content="くだらないランキングを作ったり、参加したり、コメントできる遊び場" />
+  <meta property="og:url" content="https://www.kudarank.work" />
+  <meta property="og:title" content="くだらんきんぐ | これは・・・なんなんだろう・・・" />
+  <meta property="og:image" content="{% static 'img/logo1.png' %}"/>
+  <meta property="og:type" content="website">
+  <title>くだらんきんぐ。</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104974987-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-104974987-5');
+  </script>
+
+
+</head>
+<body>
+
+  <!-- header -->
+  <div class="header">
+    <div class="header_container">
+      <h1 class="header-headline">
+        <a href="{% url 'ranking:index' %}"><img src="{% static 'img/logo.png' %}" class="header_logo"></a>
+      </h1>
+      <div class="header_right">
+        <div class="header_menu">
+            <label for="label1"><div class="header_menuicon"><i class="fas fa-ellipsis-h"></i></div></label>
+            <input type="checkbox" id="label1"/>
+            <div class="hidden_show">
+              <!-- 非表示ここから-->
+              <div class="header_menucorner"></div>
+              <div class="header_menucorner2"></div>
+              <div class="header_menubox">
+                <form name="search1" method="GET" action="{% url 'ranking:search_results' %}">{% csrf_token %}
+                  <dl class="search1">
+                    <dt><input type="text" name="keyword" maxlength="20" required id="id_Post_name" placeholder="ランキング検索"></dt>
+                    <dd><button><span></span></button></dd>
+                    <!-- <dd><button type="submit" class="sbtn2"><i class="fas fa-search"></i><span></span></button></dd> -->
+                  </dl>
+                </form>
+                <div class="header_menulist"><a href="{% url 'ranking:index' %}"></a>トップページ</div>
+                <div class="header_menulist"><a href ="{% url 'ranking:new' %}"></a>ランキング作成</div>
+                {% if user.id %}
+                <div class="header_menulist hidden"><a href="{% url 'ranking:userpage' user_id=user.id %}"></a>マイページ</div>
+                {% else %}
+                <div class="header_menulist hidden"><a href="{%url 'account_login'%}?next={{ request.path }}"></a>ログイン</div>
+                {% endif %}
+                <div class="header_menuborder"></div>
+                <div class="header_menulist"><a href="{% url 'ranking:aboutpage' %}"></a>about</div>
+                <div class="header_menulist"><a href="{% url 'ranking:TermsofUse' %}"></a>利用規約・プライバシーポリシー</div>
+                <div class="header_menuborder"></div>
+                {% if user.username %}
+                <div class="header_menulist"><a href="{%url 'account_logout'%}"></a>ログアウト</div>
+                {% endif %}
+              </div>
+              <!--ここまで -->
+            </div>
+        </div>
+        {% if not user.username %}
+        <!-- ログインボタン -->
+        <div class="header_account_logout">
+          <div class="header_username">ログイン</div>
+          <a href="{%url 'account_login'%}?next={{ request.path }}"></a>
+        </div>
+        {% else %}
+        <!-- アカウントボタン -->
+            {% if user.first_name %}
+            <!-- ツイッターユーザー -->
+            <div class="header_account">
+              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <div class="header_username">{{user.first_name|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% else %}
+            <!-- くだらんきんぐユーザー -->
+            <div class="header_account">
+              <div class="header_username">{{user.username|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+    <div class="main">
+
+      <div class="category">
+        <h2 class="category_title">新着ランキング</h2>
+      </div>
+      <div class="article_container">
+        {% for reco in Recommend %}
+        <article class="article_link">
+          {% if reco.id in article_set %}
+          <a href="{% url 'ranking:rankpaged' ranking_id=reco.id %}">
+          {% else %}
+          <a href="{% url 'ranking:rankpage' ranking_id=reco.id %}">
+          {% endif %}
+            <div class="article_contents">
+              {% if forloop.counter is 1 %}
+              <h3 class="article_number number1">{{ forloop.counter }}</h2>
+              {% elif forloop.counter is 2 %}
+              <h3 class="article_number number2">{{ forloop.counter }}</h2>
+              {% elif forloop.counter is 3 %}
+              <h3 class="article_number number3">{{ forloop.counter }}</h2>
+              {% else %}
+              <h3 class="article_number number">{{ forloop.counter }}</h2>
+              {% endif %}
+              <h3 class="article_title">{{ reco.title|truncatechars:12 }}</h2>
+              <p class="article_note">{{ reco.description|truncatechars:12 }}</p>
+              <p class="article_participants">{{reco.Posts.count}}人</p>
+            </div>
+          </a>
+        </article>
+          {% endfor %}
+          <!-- もっと見る -->
+          <div class="article_more">
+            <a href="{% url 'ranking:newest_ranking' %}" class="article_more-a">もっとみる</a>
+          </div>
+        </div>
+
+
+
+
+
+
+        <div class="category">
+          <h2 class="category_title">参加者ランキング</h2>
+        </div>
+        <div class="article_container">
+          {% for ninki in create_ranking_list %}
+          <article class="article_link">
+            {% if ninki.id in article_set %}
+            <a href="{% url 'ranking:rankpaged' ranking_id=ninki.id %}">
+            {% else %}
+            <a href="{% url 'ranking:rankpage' ranking_id=ninki.id %}">
+            {% endif %}
+              <div class="article_contents">
+                {% if forloop.counter is 1 %}
+                <h3 class="article_number number1">{{ forloop.counter }}</h2>
+                {% elif forloop.counter is 2 %}
+                <h3 class="article_number number2">{{ forloop.counter }}</h2>
+                {% elif forloop.counter is 3 %}
+                <h3 class="article_number number3">{{ forloop.counter }}</h2>
+                {% else %}
+                <h3 class="article_number number">{{ forloop.counter }}</h2>
+                {% endif %}
+                <h3 class="article_title">{{ ninki.title|truncatechars:12}}</h2>
+                <p class="article_note">{{ ninki.description|truncatechars:12}}</p>
+                <p class="article_participants">{{ninki.Posts.count}}人</p>
+              </div>
+            </a>
+          </article>
+            {% endfor %}
+            <!-- もっと見る -->
+            <div class="article_more">
+              <a href="{% url 'ranking:Soaring_ranking' %}" class="article_more-a">もっとみる</a>
+            </div>
+          </div>
+
+
+
+
+
+          <div class="category">
+            <h2 class="category_title">ランダムでランキングを表示</h2>
+          </div>
+          <div class="article_container">
+            {% for rand in random %}
+            <article class="article_link">
+              {% if rand.id in article_set %}
+              <a href="{% url 'ranking:rankpaged' ranking_id=rand.id %}">
+              {% else %}
+              <a href="{% url 'ranking:rankpage' ranking_id=rand.id %}">
+              {% endif %}
+                <div class="article_contents">
+                  <h3 class="article_title">{{ rand.title|truncatechars:12 }}</h2>
+                  <p class="article_note">{{ rand.description|truncatechars:12}}</p>
+                  <p class="article_participants">{{rand.Posts.count}}人</p>
+                </div>
+              </a>
+            </article>
+              {% endfor %}
+            </div>
+
+
+
+
+
+            <div class="category">
+              <h2 class="category_title">急上昇ランキング</h2>
+            </div>
+            <div class="article_container">
+              {% for soar_list in Soar %}
+              <article class="article_link">
+                {% if soar_list.id in article_set %}
+                <a href="{% url 'ranking:rankpaged' ranking_id=soar_list.id %}">
+                {% else %}
+                <a href="{% url 'ranking:rankpage' ranking_id=soar_list.id %}">
+                {% endif %}
+                  <div class="article_contents">
+                    {% if forloop.counter is 1 %}
+                    <h3 class="article_number number1">{{ forloop.counter }}</h2>
+                    {% elif forloop.counter is 2 %}
+                    <h3 class="article_number number2">{{ forloop.counter }}</h2>
+                    {% elif forloop.counter is 3 %}
+                    <h3 class="article_number number3">{{ forloop.counter }}</h2>
+                    {% else %}
+                    <h3 class="article_number number">{{ forloop.counter }}</h2>
+                    {% endif %}
+                    <h3 class="article_title">{{ soar_list.title|truncatechars:12 }}</h2>
+                    <p class="article_note">{{ soar_list.description|truncatechars:12}}</p>
+                    <p class="article_participants">{{soar_list.Posts.count}}人</p>
+                  </div>
+                </a>
+              </article>
+                {% endfor %}
+                <!-- もっと見る -->
+                <!-- <div class="article_more">
+                  <a href="{% url 'ranking:Soaring_ranking' %}" class="article_more-a">もっとみる</a>
+                </div> -->
+              </div>
+
+      </div>
+    </body>
+</html>

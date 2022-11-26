@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>利用規約・プライバシーポリシー</title>
   {% load static %}
-  {% load i18n %}
-  {% load account socialaccount %}
   <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <script data-ad-client="ca-pub-5444509011914766" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <meta charset="utf-8">
-  <!-- <script src="juni.js" charset="utf-8"></script> -->
-  <title>loginページ</title>
+  {% load account %}
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104974987-5"></script>
@@ -22,7 +21,6 @@
   </script>
 
 </head>
-
 <body>
 
   <!-- header -->
@@ -55,8 +53,8 @@
                 <div class="header_menulist hidden"><a href="{%url 'account_login'%}?next={{ request.path }}"></a>ログイン</div>
                 {% endif %}
                 <div class="header_menuborder"></div>
-                <div class="header_menulist"><a href="about.html"></a>about</div>
-                <div class="header_menulist"><a href="rule.html"></a>利用規約・プライバシーポリシー</div>
+                <div class="header_menulist"><a href="{% url 'ranking:aboutpage' %}"></a>about</div>
+                <div class="header_menulist"><a href="{% url 'ranking:TermsofUse' %}"></a>利用規約・プライバシーポリシー</div>
                 <div class="header_menuborder"></div>
                 {% if user.username %}
                 <div class="header_menulist"><a href="{%url 'account_logout'%}"></a>ログアウト</div>
@@ -93,42 +91,15 @@
   </div>
 <!-- header終わり -->
 
-
-
 <div class="main">
 
-  <div class="article_container flex">
-
-    <div class="login_left">
-      <p class="login_note">ランキングの作成にはログインが必要です。</p>
-      <p class="login_note"><a href="{% url 'twitter_login' %}?next={{redirect_field_value}}">Twitterでログイン</a></p>
-      <p class="login_note">くだらんきんぐのアカウントでログイン</p>
-      <form class="login" method="POST" action="{% url 'account_login' %}">
-        {% csrf_token %}
-        <div class="login_note"><font color="red">{{form.non_field_errors}}<font></div>
-        {% for field in form %}
-        {%ifequal field.label 'ログインしたままにする'%}
-        {%else%}
-            <div class="cp_iptxt">{{field}}</div>
-            <div class="login_note"><font color="red">{{field.errors}}<font></div>
-        {% endifequal %}
-        {% endfor %}
-        <!-- 下記のif文が元ページに戻るためのvalueです。 -->
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
-        <div class="article_contents_more">
-          <div class="sankasiyo">
-            <button type="submit" class="article_more">{% trans "Sign In" %}</button>
-        </div>
-        </div>
-      </form>
-
-      <p class="login_note"><a href="{{ signup_url }}">新規登録</a></p>
-
-    </div>
-
+  <div class="category">
+    <h2 class="category_title">利用規約・プライバシーポリシー</h2>
   </div>
-</body>
+<iframe src="{% static 'pdf/TermsofUse.pdf' %}" width="100%" height="1200"></iframe>
+<p><a href="{% static 'pdf/TermsofUse.pdf' %}">利用規約リンク</a></p>
 
+
+</div>
+</body>
 </html>

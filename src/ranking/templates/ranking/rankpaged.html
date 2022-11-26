@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load static %}
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"> -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <script data-ad-client="ca-pub-5444509011914766" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <meta charset="utf-8">
+  <title>くだらんきんぐ | {{ rankpage.title }}</title>
+  <meta name="description" content="{{ rankpage.description }}" />
+  <meta property="og:url" content="https://www.kudarank.work" />
+  <meta property="og:title" content="くだらんきんぐ | {{ rankpage.title }}" />
+  <meta property="og:image" content="{% static 'img/logo1.png' %}"/>
+  <meta property="og:type" content="website">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104974987-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-104974987-5');
+  </script>
+
+</head>
+
+<body>
+
+
+
+  <!-- header -->
+  <div class="header">
+    <div class="header_container">
+      <h1 class="header-headline">
+        <a href="{% url 'ranking:index' %}"><img src="{% static 'img/logo.png' %}" class="header_logo"></a>
+      </h1>
+      <div class="header_right">
+        <div class="header_menu">
+            <label for="label1"><div class="header_menuicon"><i class="fas fa-ellipsis-h"></i></div></label>
+            <input type="checkbox" id="label1"/>
+            <div class="hidden_show">
+              <!-- 非表示ここから-->
+              <div class="header_menucorner"></div>
+              <div class="header_menucorner2"></div>
+              <div class="header_menubox">
+                <form name="search1" method="GET" action="{% url 'ranking:search_results' %}">{% csrf_token %}
+                  <dl class="search1">
+                    <dt><input type="text" name="keyword" maxlength="20" required id="id_Post_name" placeholder="ランキング検索"></dt>
+                    <dd><button><span></span></button></dd>
+                    <!-- <dd><button type="submit" class="sbtn2"><i class="fas fa-search"></i><span></span></button></dd> -->
+                  </dl>
+                </form>
+                <div class="header_menulist"><a href="{% url 'ranking:index' %}"></a>トップページ</div>
+                <div class="header_menulist"><a href ="{% url 'ranking:new' %}"></a>ランキング作成</div>
+                {% if user.id %}
+                <div class="header_menulist hidden"><a href="{% url 'ranking:userpage' user_id=user.id %}"></a>マイページ</div>
+                {% else %}
+                <div class="header_menulist hidden"><a href="{%url 'account_login'%}?next={{ request.path }}"></a>ログイン</div>
+                {% endif %}
+                <div class="header_menuborder"></div>
+                <div class="header_menulist"><a href="{% url 'ranking:aboutpage' %}"></a>about</div>
+                <div class="header_menulist"><a href="{% url 'ranking:TermsofUse' %}"></a>利用規約・プライバシーポリシー</div>
+                <div class="header_menuborder"></div>
+                {% if user.username %}
+                <div class="header_menulist"><a href="{%url 'account_logout'%}"></a>ログアウト</div>
+                {% endif %}
+              </div>
+              <!--ここまで -->
+            </div>
+        </div>
+        {% if not user.username %}
+        <!-- ログインボタン -->
+        <div class="header_account_logout">
+          <div class="header_username">ログイン</div>
+          <a href="{%url 'account_login'%}?next={{ request.path }}"></a>
+        </div>
+        {% else %}
+        <!-- アカウントボタン -->
+            {% if user.first_name %}
+            <!-- ツイッターユーザー -->
+            <div class="header_account">
+              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <div class="header_username">{{user.first_name|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% else %}
+            <!-- くだらんきんぐユーザー -->
+            <div class="header_account">
+              <div class="header_username">{{user.username|truncatechars:20}}</div>
+            <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
+            </div>
+            {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+<!-- header終わり -->
+
+
+
+  <div class="main">
+    <div class="ranking">
+      <h2 class="ranking_title">{{ rankpage.title }}</h2>
+      <div class="ranking_note">{{ rankpage.description }}</div>
+      <div class="ranking_author">作成者：<div class="ranking_authorname"><a href="{% url 'ranking:userpage' user_id=rankpage.Createduser.id %}">{{ rankpage.Createduser }}</a></div></div>
+    </div>
+
+    <div class="article_container_sankasiyo">
+
+      <!-- 入力済み私的ユーザーの情報 -->
+      <div>{{error_mse}}</div>
+      <div class="rank_account">
+          {% if user.first_name %}
+              <div class="rank_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="rank_userimg"></div>
+              <div class="rank_username">{{user.first_name}}</div>
+          {% elif user.username %}
+              <div class="rank_username">{{user.username}}</div>
+          {% else %}
+              <div class="rank_username">You</div>
+          {% endif %}
+          <!-- {% if not rankpage.Done_ranking %}
+          　　<a href="{% url 'ranking:rankpage' ranking_id=rankpage.id %}">再投稿</a>
+          {% endif %} -->
+      </div>
+
+      <div class="rank_resultall">
+
+        <div class="rank_result_box">
+          <div class="rank_result_title">順位</div>
+          <div class="rank_result_unit">
+            <div class="rank_result">{{result_ranking}}</div>
+            <div class="rank_resultcnt">位</div>
+          </div>
+        </div>
+
+        <div class="rank_result_box resultbox_center">
+          {% if rankpage.int_or_float %}
+          <div class="rank_result_title">{{ rankpage.element }}</div>
+          <div class="rank_result_unit">
+            <div class="rank_result">{{result_element}}</div>
+            <div class="rank_resultcnt"></div>
+          </div>
+          {% else %}
+          <div class="rank_result_title">{{rankpage.element}}</div>
+          <div class="rank_result_unit">
+            <div class="rank_result">{{ result_element }}</div>
+            <div class="rank_resultcnt"></div>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="rank_result_box">
+          <div class="rank_result_title">偏差値</div>
+          <div class="rank_result_unit">
+            <div class="rank_result">{{result_hensati}}</div>
+          </div>
+        </div>
+
+      </div>
+      <div class="shita">
+      {% if result_ranking%}
+      <button class="tweet middle">
+        <!-- <i class="fab fa-twitter userpage_linkicon"></i> -->
+        {% if rankpage.id == 44 %}
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
+偏差値は{{result_hensati}}です。
+
+#一週間ランキング
+#くだらんきんぐ"
+>Tweet</a>
+        {% else %}
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
+偏差値は{{result_hensati}}です。
+
+#くだらんきんぐ">Tweet</a>
+        {% endif %}
+      </button>
+
+      {% else %}
+      <button class="tweet middle">
+        <!-- <i class="fab fa-twitter userpage_linkicon"></i> -->
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加しました。">Tweet</a>
+      </button>
+
+      {% endif %}
+      <button class="repost middle"><i class="fas fa-pencil-alt userpage_linkicon"></i><a href='{% url 'ranking:rankpage' ranking_id=rankpage.id %}'>再投稿</a></button>
+      </div>
+    </div>
+
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <div class="article_container">
+
+          <table>
+            <tr>
+              <th>順位</th>
+              <th>名前</th>
+              <th>{{ rankpage.element }}</th>
+              <th>偏差値</th>
+            </tr>
+            {% for Post_rank in a %}
+            <!-- 順位ごとにラベル -->
+            {% if Post_rank.Posteduser.pk is user.pk%}
+            {% if user.first_name %}
+            <tr class="table_applicable">
+            {% endif %}
+            {% else %}
+            <tr>
+            {% endif %}
+                {% if Post_rank.Post_juni == 1 %}
+                  <td><div class="article_number_table number1">{{ Post_rank.Post_juni }}</div></td>
+                {% elif Post_rank.Post_juni == 2 %}
+                  <td><div class="article_number_table number2">{{ Post_rank.Post_juni }}</div></td>
+                {% elif Post_rank.Post_juni == 3 %}
+                  <td><div class="article_number_table number3">{{ Post_rank.Post_juni }}</div></td>
+                {% else %}
+                  <td><div class="article_number_table">{{ Post_rank.Post_juni }}</div></td>
+                  {% endif %}
+
+
+
+              <!-- 参加済みならランキングページへ -->
+              <!-- 一位から順に名前表示 -->
+              {% if Post_rank.Posteduser%}
+                  <td class="table_ranking_name"><a href="{% url 'ranking:userpage' user_id=Post_rank.Posteduser.id%}">{{ Post_rank.Post_name }}</a></td>
+              {% else %}
+                  <td class="table_ranking_name">{{ Post_rank.Post_name }}</td>
+              {% endif %}
+
+
+
+              <!-- 小数モデルなら小数で表示、整数モデルなら整数で表示modelのint_or_floatで判断 -->
+              {% if Post_rank.article.int_or_float %}
+              <td>{{ Post_rank.Post_element }}</td>
+              {% else %}
+              <td>{{ Post_rank.Post_element|floatformat:"0" }}</td>
+              {% endif %}
+              <!-- https://qiita.com/uenosy/items/3c8e220a01ae21546e1c -->
+
+
+              <td>{{ Post_rank.Post_hensati }}</td>
+            </tr>
+            {% empty %}
+            <p>投稿はありません</p>
+          {% endfor %}
+          </table>
+    </div>
+
+<!-- <p>{{rankpage.title}}に参加しました。</p>
+<h1>{{result|linebreaks}}</h1> -->
+
+    <div class="comment_150px"></div>
+  </div>
+
+  <div class="ranking_comment_footer">
+
+    <div class="comment_more" id="commentMore">
+      <div class="comment_more-a" id="moreButtonText">コメントをさらに表示 <i class="fas fa-angle-up"></i></div>
+    </div>
+
+    <div class="comment_container" id="commentPanel">
+      <div class="comment_post_blank">
+      </div>
+
+     <div id= "tuika"></div>
+
+    {% for i in post_coment %}
+
+    <div class="comment_post">
+      <p class="comment_name">{{i.Post_coment_name}}</p>
+      <p class="comment_note">{{i.Post_coment_text}}</p>
+    </div>
+    {% endfor %}
+
+    </div>
+
+    <div class="commentform_container">
+
+      <div class="commentform_innner">
+        <div class="cp_iptxt_commentname">
+          <label class="ef_comment">
+            {% if not user.username %}
+            <!-- <input id="coment-name-input" type="text" name="Post_coment_name"  maxlength="10" id="id_Post_coment_name" placeholder="名前"> -->
+            <textarea id="coment-name-input" name="Post_coment_name"  maxlength="20" id="id_Post_coment_name" placeholder="名前"></textarea>
+              {% else %}
+              {% if user.first_name %}
+                <!-- <input id="coment-name-input" type="text" name="Post_coment_name"  maxlength="10" id="id_Post_coment_name" placeholder="名前" value={{user.first_name}}> -->
+                <textarea id="coment-name-input" name="Post_coment_name"  maxlength="20" id="id_Post_coment_name" placeholder="名前">{{user.first_name}}</textarea>
+              {% else %}
+                <!-- <input id="coment-name-input" type="text" name="Post_coment_name"  maxlength="10" id="id_Post_coment_name" placeholder="名前" value={{user.username}}> -->
+                <textarea id="coment-name-input" name="Post_coment_name"  maxlength="20" id="id_Post_coment_name" placeholder="名前">{{user.username}}</textarea>
+              {% endif %}
+            {% endif %}
+
+          </label>
+        </div>
+        <div class="cp_iptxt_comment">
+          <label class="ef_comment">
+            <!-- <input id="coment-coment-input" type="text" name="Post_coment_text" maxlength="300" required id="id_Post_coment_text" placeholder="コメント"> -->
+            <textarea id="coment-coment-input" name="Post_coment_text" maxlength="300" required id="id_Post_coment_text" placeholder="コメント"></textarea>
+          </label>
+        </div>
+        <!-- <input id="coment-submit" type="submit"　class="comment_btn" value="送信"/> -->
+        <button id="coment-submit" class="comment_btn">送信</button>
+      </div>
+    </div>
+
+
+  </div>
+</body>
+
+<script language="JavaScript">
+    var ranking_page_name = String({{ranking_page_json}});
+    
+    let ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+    // var chatSocket = new WebSocket( ws_scheme + "://" + window.location.host + '/ws/chat_app/' + roomName + '/');
+    var chatSocket = new WebSocket(
+        ws_scheme + "://" + window.location.host +
+        '/ws/rankpaged/' + ranking_page_name + '/');
+    //var connection = new WebSocket(【通信を行うURL】);
+    //「ws://」と「wss://」の違いについてはセキュアな通信ができるかどうか？ということです。。
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var name = data['name'];
+        var coment = data['coment'];
+        //document.querySelector('#chat-log').value += (coment + '\n');
+        var tuikamese = document.getElementById('tuika');
+        // tuikamese.innerHTML="<p>"+name+" : "+coment+"</p>"+tuikamese.innerHTML;
+        tuikamese.innerHTML='<div class="comment_post"><p class="comment_name">'+name+'</p><p class="comment_note">'+coment+"</p></div>"+tuikamese.innerHTML;
+    };
+
+    document.querySelector('#coment-submit').onclick = function(e) {
+        var nameInputDom = document.querySelector('#coment-name-input');
+        var comentInputDom = document.querySelector('#coment-coment-input');
+        //入力値したelementを入手
+        var coment = comentInputDom.value;
+        var name = nameInputDom.value;
+        const NG_WORDS = /殺す|死ね|殺害|爆破|死ぬ|自殺|http:|https:/;
+        if (NG_WORDS.test(name) || NG_WORDS.test(coment)) {
+          alert('NGワードが含まれています。');
+        }
+        else {
+          // name or comentに禁止ワードが設定されている場合以下は実行されません。
+          if(!name || !name.match(/\S/g)){
+            name="匿名";
+          };
+          //実際のelementの値を入手。
+          if (coment && coment.match(/\S/g)){
+          chatSocket.send(JSON.stringify({
+              'coment': coment,
+              'name' : name
+          }));
+          comentInputDom.value = ' ';
+          // coment欄はrequiredなので、何か文字を入れておくと送信後のこのフィールドが必須ですが不要になる。
+          // nameInputDom.value = '';
+        };
+
+        }
+
+    };
+
+    ///////コメントをさらに表示////////
+    const morebtn = document.getElementById('commentMore');
+    function openComment(){
+      document.getElementById('commentPanel').classList.toggle('comment_open');
+      // console.log(document.getElementById('moreButtonText').innnerHTML);
+      if(commentPanel.classList.contains('comment_open')){
+        document.getElementById('moreButtonText').innerHTML = 'コメントを閉じる <i class="fas fa-angle-down"></i>';
+      } else{
+        document.getElementById('moreButtonText').innerHTML = 'コメントをさらに表示 <i class="fas fa-angle-up"></i>';
+      }
+    }
+    morebtn.addEventListener('click', openComment, false);
+    ///////コメントをさらに表示////////
+
+</script>
+</html>

@@ -2,15 +2,12 @@
 <html>
 <head>
   {% load static %}
-  {% load i18n %}
-  {% load account socialaccount %}
   <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <script data-ad-client="ca-pub-5444509011914766" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <meta charset="utf-8">
-  <!-- <script src="juni.js" charset="utf-8"></script> -->
-  <title>loginページ</title>
+  <title>ランキングサイトです。</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-104974987-5"></script>
@@ -22,10 +19,10 @@
   </script>
 
 </head>
-
 <body>
 
   <!-- header -->
+
   <div class="header">
     <div class="header_container">
       <h1 class="header-headline">
@@ -55,8 +52,8 @@
                 <div class="header_menulist hidden"><a href="{%url 'account_login'%}?next={{ request.path }}"></a>ログイン</div>
                 {% endif %}
                 <div class="header_menuborder"></div>
-                <div class="header_menulist"><a href="about.html"></a>about</div>
-                <div class="header_menulist"><a href="rule.html"></a>利用規約・プライバシーポリシー</div>
+                <div class="header_menulist"><a href="{% url 'ranking:aboutpage' %}"></a>about</div>
+                <div class="header_menulist"><a href="{% url 'ranking:TermsofUse' %}"></a>利用規約・プライバシーポリシー</div>
                 <div class="header_menuborder"></div>
                 {% if user.username %}
                 <div class="header_menulist"><a href="{%url 'account_logout'%}"></a>ログアウト</div>
@@ -94,40 +91,85 @@
 <!-- header終わり -->
 
 
-
 <div class="main">
 
-  <div class="article_container flex">
+  <div class="category">
+    <h2 class="category_title">作成したランキング</h2>
+  </div>
 
-    <div class="login_left">
-      <p class="login_note">ランキングの作成にはログインが必要です。</p>
-      <p class="login_note"><a href="{% url 'twitter_login' %}?next={{redirect_field_value}}">Twitterでログイン</a></p>
-      <p class="login_note">くだらんきんぐのアカウントでログイン</p>
-      <form class="login" method="POST" action="{% url 'account_login' %}">
-        {% csrf_token %}
-        <div class="login_note"><font color="red">{{form.non_field_errors}}<font></div>
-        {% for field in form %}
-        {%ifequal field.label 'ログインしたままにする'%}
-        {%else%}
-            <div class="cp_iptxt">{{field}}</div>
-            <div class="login_note"><font color="red">{{field.errors}}<font></div>
-        {% endifequal %}
-        {% endfor %}
-        <!-- 下記のif文が元ページに戻るためのvalueです。 -->
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  <div class="article_container">
+
+    {% for a in create_ranking_list %}
+    <article class="article_link"><!-- 記事ひとかたまり。 -->
+      {% if a.id in article_set %}
+      <a href="{% url 'ranking:rankpaged' ranking_id=a.id %}">
+      {% else %}
+      <a href="{% url 'ranking:rankpage' ranking_id=a.id %}">
+      {% endif %}
+      <div class="article_contents" id="test13">
+        <h2 class="article_sentenses article_title made">{{ a.title|truncatechars:12 }}</h2>
+        <p class="article_sentenses article_participants">{{a.Posts.count}}人</p>
+        <!-- <p class="article_sentenses article_participants">コメント:{{a.Posts_coment.count}}</p> -->
+        <p class="article_sentenses article_note">{{ a.description |truncatechars:12  }}</p>
+
+        {% if a.Createduser.id == user.id %}
+        <form method="post" action="{% url 'ranking:delete_ranking' a.id %}">{% csrf_token %}
+          <button type="submit" class="sbtn4" onclick='return confirm("本当に削除しますか？");'><i class="fa fa-trash" aria-hidden="true"></i></button>
+          <!-- <button class="btn" type="submit" onclick='return confirm("本当に削除しますか？");'>×</button> -->
+        </form>
         {% endif %}
-        <div class="article_contents_more">
-          <div class="sankasiyo">
-            <button type="submit" class="article_more">{% trans "Sign In" %}</button>
-        </div>
-        </div>
-      </form>
+      </div>
+      </a>
+    </article>
 
-      <p class="login_note"><a href="{{ signup_url }}">新規登録</a></p>
+    {% endfor %}
 
+    <!-- リスト最後尾余白 -->
+    <div class="list_end_8px">
     </div>
 
+  </div>
+
+  <!-- ページ切り替えスイッチ部 -->
+  <div class="list_switch">
+    <div class="list_switch_container">
+      {% if page_obj.number != 1 %}
+        <div class="listswitch_text"><a href = "?page=1">最前部</a></div>
+      {% else %}
+        <div class="listswitch_text unclick_gray">最前部</div>
+      {% endif %}
+      {% if page_obj.has_previous %}
+      <div class="listswitch_text"><i class="fas fa-chevron-left"></i><a href = "?page={{ page_obj.previous_page_number }}">前へ</a></div>
+      {% else %}
+      <div class="listswitch_text unclick_gray"><i class="fas fa-chevron-left"></i>前へ</div>
+      {% endif %}
+      <!-- クリックができない場合には以上2つの"unclick_gray"を適用したい。これは最前(1)の例だが、最後も同様。 -->
+      <div class="listswitch_numberbox">
+        <!-- 以下数字リスト。現在いるページにあたる数字には"listswitch_number_now"を指定、文字色及びweightを変更して強調する。 -->
+        <div class="listswitch_numbercontainer">
+          {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                  <div class="listswitch_number listswitch_number_now">{{ num }}</div>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <div class="listswitch_number"><a href = "?page={{ num }}">{{num}}</a></div>
+              {% endif %}
+          {% endfor %}
+        </div>
+        <!-- 数字リストここまで。 -->
+        <!-- ページ数が極端に少ない場合(ex.1と2のみ)でも動作する。divを5つ記述する必要はない。 -->
+      </div>
+      {% if page_obj.has_next %}
+        <div class="listswitch_text"><a href = "?page={{ page_obj.next_page_number }}">次へ</a><i class="fas fa-chevron-right"></i></div>
+      {% else %}
+        <div class="listswitch_text unclick_gray">次へ<i class="fas fa-chevron-right"></i></div>
+      {% endif %}
+      {% if page_obj.number != paginator.num_pages %}
+        <div class="listswitch_text"><a href = "?page={{paginator.num_pages}}">最後部</a></div>
+      {% else %}
+        <div class="listswitch_text unclick_gray">最後部</div>
+      {% endif %}
+    </div>
+  </div>
   </div>
 </body>
 
