@@ -1,0 +1,8 @@
+<p>ほーむ</p>
+{% load account %}
+{{user.username}}
+<h1>{{user.first_name}}でログイン中です。</h1>
+<h1>{{user.pk}}でログイン中です。</h1>
+<a href="{%url 'account_logout'%}">ログアウト</a>
+
+<!-- %url account_logoutってurlに名前をつけている。path関数によって。-->

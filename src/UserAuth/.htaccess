@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+Options +FollowSymLinks
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^seopack\.jp$
+RewriteRule ^(.*)$ http://www.seopack.jp/$1 [R=301,L]
+</IfModule>
