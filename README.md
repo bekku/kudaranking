@@ -2,9 +2,11 @@
 
 ## [URL](http://52.192.6.119/)
 
-[twitter](https://twitter.com/kudaranking)
-
 公開を終えて、AWSにデプロイし直したものです。
+
+下記のTwitterは公開当時動かしていたものです。
+
+[twitter](https://twitter.com/kudaranking) 
 
 ## サイト概要
 ランキングを作成や参加して、コメントを楽しむものです。
