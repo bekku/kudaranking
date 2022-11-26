@@ -1,4 +1,11 @@
 # くだらんきんぐ - kudaranking
+
+## [URL](http://52.192.6.119/)
+
+[twitter](https://twitter.com/kudaranking)
+
+公開を終えて、AWSにデプロイし直したものです。
+
 ## サイト概要
 ランキングを作成や参加して、コメントを楽しむものです。
 
