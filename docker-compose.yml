@@ -3,7 +3,9 @@ version: '3'
 services:
   python3:
     build: ./python3
-    command: bash -c "rm db.sqlite3 && python manage.py migrate && export DJANGO_SUPERUSER_USERNAME=${ROOT_NAME} && export DJANGO_SUPERUSER_EMAIL=${ROOT_MAIL} && export DJANGO_SUPERUSER_PASSWORD=${ROOT_PASSWORD} && python manage.py createsuperuser --no-input && python manage.py collectstatic && supervisord && uwsgi --socket :8001 --module webranking.wsgi --py-autoreload 1"
+    # 初up時は、上、sqliteとstaticを消す。staticをcollectする。createsuperuseする。
+    # command: bash -c "rm db.sqlite3 && python manage.py migrate && export DJANGO_SUPERUSER_USERNAME=${ROOT_NAME} && export DJANGO_SUPERUSER_EMAIL=${ROOT_MAIL} && export DJANGO_SUPERUSER_PASSWORD=${ROOT_PASSWORD} && python manage.py createsuperuser --no-input && python manage.py collectstatic && supervisord && uwsgi --socket :8001 --module webranking.wsgi --py-autoreload 1"
+    command: bash -c "supervisord && uwsgi --socket :8001 --module webranking.wsgi --py-autoreload 1"
     volumes:
       - ./src:/src
       - ./src/static:/src/static
@@ -14,7 +16,6 @@ services:
       PYTHONPATH: /src
     env_file:
       - .env
-
   nginx:
     build: ./nginx
     ports:
@@ -25,7 +26,6 @@ services:
       - ./src/static:/src/static
     depends_on:
       - python3
-
   redis:
     build:
       context: ./redis

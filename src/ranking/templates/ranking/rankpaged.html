@@ -81,7 +81,7 @@
             {% if user.first_name %}
             <!-- ツイッターユーザー -->
             <div class="header_account">
-              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <!-- <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div> -->
               <div class="header_username">{{user.first_name|truncatechars:20}}</div>
             <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
             </div>
@@ -113,7 +113,7 @@
       <div>{{error_mse}}</div>
       <div class="rank_account">
           {% if user.first_name %}
-              <div class="rank_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="rank_userimg"></div>
+              <!-- <div class="rank_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="rank_userimg"></div> -->
               <div class="rank_username">{{user.first_name}}</div>
           {% elif user.username %}
               <div class="rank_username">{{user.username}}</div>

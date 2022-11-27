@@ -4,3 +4,7 @@ db.sqlite3
 .env
 .python-version
 local_settings.py
+
+kudaranking.pem
+step_server.pem
+くだらんきんぐ_aws.txt

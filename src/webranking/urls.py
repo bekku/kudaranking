@@ -14,5 +14,5 @@ urlpatterns = [
     path('auth/', include('allauth.urls')),
 
     path('chat/',include('chat.urls')),
-    path('social_django', include('social_django.urls', namespace='social')),
+    path('social_django/', include('social_django.urls')),
 ]

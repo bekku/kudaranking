@@ -75,7 +75,7 @@
             {% if user.first_name %}
             <!-- ツイッターユーザー -->
             <div class="header_account">
-              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <!-- <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div> -->
               <div class="header_username">{{user.first_name|truncatechars:20}}</div>
             <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
             </div>
@@ -102,7 +102,7 @@
     <!-- 入力済み私的ユーザーの情報 -->
     <div class="userpage_account">
           {% if userinfo.first_name %}
-          <img src="{{ userinfo.socialaccount_set.all.0.get_avatar_url }}" class="userpage_img">
+          <!-- <img src="{{ userinfo.socialaccount_set.all.0.get_avatar_url }}" class="userpage_img"> -->
           <div class="userpage_detail">
             <div class="userpage_name">{{userinfo.first_name}}</div>
             <p></p>

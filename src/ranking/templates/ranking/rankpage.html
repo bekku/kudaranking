@@ -79,7 +79,7 @@
             {% if user.first_name %}
             <!-- ツイッターユーザー -->
             <div class="header_account">
-              <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div>
+              <!-- <div class="header_userimg"><img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" class="header_userimg"></div> -->
               <div class="header_username">{{user.first_name|truncatechars:20}}</div>
             <a href="{% url 'ranking:userpage' user_id=user.id %}"></a>
             </div>
@@ -109,7 +109,8 @@
     <div class="article_container_sankasiyo">
       <p class="sankasiyo">投稿してランキングに参加しよう！</p>
       {% if not user.username %}
-      <p class="login_note"><a href="{% url 'twitter_login' %}?next={{ request.path }}">Twitterでログイン</a> ← お得</p>
+      <p class="login_note"><a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">Twitterでログイン</a> ← お得</p>
+      <!-- <p class="login_note"><a href="{% url 'twitter_login' %}?next={{ request.path }}">Twitterでログイン</a> ← お得</p> -->
       {% endif %}
       <p>{% if form.errors %}
     <div>{{form.non_field_errors}}</div>

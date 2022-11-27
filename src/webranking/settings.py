@@ -62,6 +62,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # twitter認証用
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -81,9 +84,6 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,10 +98,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'ja'
 TIME_ZONE ='Asia/Tokyo'
@@ -120,6 +116,8 @@ SITE_ID = 2
 LOGIN_REDIRECT_URL = 'ranking:index'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'ranking:index'
 
+# For social-auth-app-django
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.twitter.TwitterOAuth',
@@ -133,10 +131,11 @@ SOCIAL_AUTH_TWITTER_KEY = os.environ.get('SOCIAL_AUTH_TWITTER_KEY')
 SOCIAL_AUTH_TWITTER_SECRET = os.environ.get('SOCIAL_AUTH_TWITTER_SECRET')
 
 # HTTPSリダイレクトの設定
+# https://qiita.com/Syoitu/items/6205774c6348bc61df90
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# https://office54.net/python/django-https-redirect
-# https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-SECURE_PROXY_SSL_HEADER
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 try:
     from .local_settings import *
