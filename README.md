@@ -1,6 +1,6 @@
 # くだらんきんぐ - kudaranking
 
-## [URL](http://kudaranking.net/)
+## [URL](http://18.180.121.0)
 
 公開を終えて、AWSにデプロイし直したものです。
 
