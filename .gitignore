@@ -7,4 +7,10 @@ local_settings.py
 
 kudaranking.pem
 step_server.pem
+kudaranking.key
+kudaranking.key.nopass
+kudaranking.crt
+kudaranking.csr
+13e1bcb6257d48de6cae210757eec5b4.txt
+
 くだらんきんぐ_aws.txt

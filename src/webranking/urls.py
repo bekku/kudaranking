@@ -12,7 +12,9 @@ urlpatterns = [
     path('top/', TemplateView.as_view(template_name='top.html'), name='top'),
     path('home/', TemplateView.as_view(template_name='home.html'), name='home'),
     path('auth/', include('allauth.urls')),
-
     path('chat/',include('chat.urls')),
     path('social_django/', include('social_django.urls')),
+
+    # 認証ファイルの配置
+    # path('.well-known/pki-validation/~.txt', TemplateView.as_view(template_name='ranking/~.txt', content_type='text/plain')),
 ]
