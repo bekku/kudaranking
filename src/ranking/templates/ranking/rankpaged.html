@@ -10,7 +10,7 @@
   <meta charset="utf-8">
   <title>くだらんきんぐ | {{ rankpage.title }}</title>
   <meta name="description" content="{{ rankpage.description }}" />
-  <meta property="og:url" content="https://www.kudarank.work" />
+  <meta property="og:url" content="https://kudaranking.net" />
   <meta property="og:title" content="くだらんきんぐ | {{ rankpage.title }}" />
   <meta property="og:image" content="{% static 'img/logo1.png' %}"/>
   <meta property="og:type" content="website">
@@ -164,14 +164,14 @@
       <button class="tweet middle">
         <!-- <i class="fab fa-twitter userpage_linkicon"></i> -->
         {% if rankpage.id == 44 %}
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://kudaranking.net{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
 偏差値は{{result_hensati}}です。
 
 #一週間ランキング
 #くだらんきんぐ"
 >Tweet</a>
         {% else %}
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://kudaranking.net{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加して、{{result_element}}{{rankpage.element}}で{{result_ranking}}位でした。
 偏差値は{{result_hensati}}です。
 
 #くだらんきんぐ">Tweet</a>
@@ -181,7 +181,7 @@
       {% else %}
       <button class="tweet middle">
         <!-- <i class="fab fa-twitter userpage_linkicon"></i> -->
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://www.kudarank.work{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加しました。">Tweet</a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url ="https://kudaranking.net{% url 'ranking:rankpage' ranking_id=rankpage.id %}" data-text="【{{rankpage.title}}】に参加しました。">Tweet</a>
       </button>
 
       {% endif %}

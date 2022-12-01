@@ -10,11 +10,3 @@ class RedirectHostMiddleware(MiddlewareMixin):
                 request.scheme, host[4:], request.get_full_path()
             )
             return HttpResponsePermanentRedirect(redirect_url)
-
-        if host and ('herokuapp' in host):
-            my_domain = 'kudarank.work'
-            # rankingranking.herokuapp.com
-            redirect_url = '%s://%s%s' % (
-                request.scheme, my_domain, request.get_full_path()
-            )
-            return HttpResponsePermanentRedirect(redirect_url)
