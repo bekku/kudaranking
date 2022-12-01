@@ -27,9 +27,11 @@
 - コメント欄(非同期通信)
 
 ## 利用した技術
- - サーバ : AWS-EC2
+ - server : AWS-EC2
  - DNS : AWS-Route53
  - FrameWork : Django
+ - web server software : nginx
+ - コンテナ : docker
 
 ## 実行手順
 python3のcommandの2パターン
