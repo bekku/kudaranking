@@ -26,7 +26,7 @@
 - ランキングページ(sort, 偏差値算出)
 - コメント欄(非同期通信)
 
-## 利用技術
+## 利用した技術
  - サーバ : AWS-EC2
  - DNS : AWS-Route53
  - FrameWork : Django
