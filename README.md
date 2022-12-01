@@ -1,6 +1,6 @@
 # くだらんきんぐ - kudaranking
 
-## [URL](http://18.180.121.0)
+## [URL](https://kudaranking.net/)
 
 公開を終えて、AWSにデプロイし直したものです。
 
@@ -15,7 +15,7 @@
 
 競い合いから話のネタ作りまで自由に利用してください。
 
-[aboutページ](http://18.180.121.0/aboutpage/) 
+[aboutページ](https://kudaranking.net/aboutpage/) 
 
 ## 機能一覧
 - ユーザー名とパスワードによる登録・ログイン
