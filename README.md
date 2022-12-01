@@ -36,11 +36,11 @@
 ## 実行手順
 python3のcommandの2パターン
 
-> ① 初compose up
+> ① 初compose upのdocker-compose.yml
 
 `command: bash -c "python manage.py migrate && export DJANGO_SUPERUSER_USERNAME=${ROOT_NAME} && export DJANGO_SUPERUSER_EMAIL=${ROOT_MAIL} && export DJANGO_SUPERUSER_PASSWORD=${ROOT_PASSWORD} && python manage.py createsuperuser --no-input && python manage.py collectstatic && supervisord && uwsgi --socket :8001 --module webranking.wsgi --py-autoreload 1"`
 
-> ② 2回目以降のcompose up
+> ② 2回目以降のcompose upのdocker-compose.yml
 
 `command: bash -c "supervisord && uwsgi --socket :8001 --module webranking.wsgi --py-autoreload 1"`
 
