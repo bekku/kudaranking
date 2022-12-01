@@ -2,7 +2,7 @@
 
 ## [URL : https://kudaranking.net](https://kudaranking.net/)
 
-公開を終えて、AWSにデプロイし直したものです。
+2020年にherokuで公開していたものをAWSにデプロイし直したものです。
 
 (DBも初期化してしまったので、利用者はいません。ご了承ください。)
 
