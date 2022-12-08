@@ -55,3 +55,8 @@ python3のcommandの2パターン
 https://libproc.com/django-channels-with-wsgi-asgi-in-docker-nginx-supervisor/
 
 https://github.com/daikidomon/nginx-django-channels/tree/supervisord
+
+[参考]Redis Pub/Sub
+https://reffect.co.jp/laravel/redis-pub-sub-dont-understand
+
+https://tech.buysell-technologies.com/entry/adventcalendar2021-12-11
